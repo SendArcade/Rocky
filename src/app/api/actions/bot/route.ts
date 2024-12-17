@@ -57,8 +57,6 @@ export const POST = async (req: Request) => {
       })
     }
 
-    const reference = Keypair.generate()
-
     const connection = new Connection(`https://staked.helius-rpc.com/?api-key=${process.env.HELIUS_API_KEY}`)
     const transaction = new Transaction()
 
@@ -69,9 +67,7 @@ export const POST = async (req: Request) => {
       new TransactionInstruction({
         programId: new PublicKey(MEMO_PROGRAM_ID),
         data: Buffer.from(`${choice}_${amount}`, "utf8"),
-        keys: [
-          { pubkey: reference.publicKey, isSigner: true, isWritable: false }
-        ]
+        keys: []
       }),
       SystemProgram.transfer({
         fromPubkey: account,
@@ -139,9 +135,7 @@ export const POST = async (req: Request) => {
             href: `/api/actions/outcome?id=${r._id.toString()}`
           }
         }
-      },
-      signers: [reference],
-      reference: reference.publicKey
+      }
     })
 
     console.log("Payload:", payload)
